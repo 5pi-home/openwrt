@@ -20,4 +20,8 @@ RUN wget -O - https://github.com/openwrt/openwrt/archive/v${OPENWRT_VERSION}.tar
 COPY --chown=openwrt:openwrt config .config
 RUN make defconfig
 
-ENV PACKAGES="samba4-server minidlna luci-app-minidlna mwan3 ntfs-3g"
+ENV PACKAGES="samba4-server minidlna luci-app-minidlna mwan3 ntfs-3g \
+  prometheus-node-exporter-lua-nat_traffic \
+  prometheus-node-exporter-lua-netstat \
+  prometheus-node-exporter-lua-openwrt \
+  prometheus-node-exporter-lua-textfile"
