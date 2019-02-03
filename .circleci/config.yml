@@ -8,6 +8,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
+          no_output_timeout: 1h
           command: |
             docker build -t openwrt .
             docker run -v $PWD/bin:/home/openwrt/bin openwrt \
