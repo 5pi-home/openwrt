@@ -8,7 +8,7 @@ RUN apt-get update && \
 RUN useradd -m openwrt &&\
     echo 'openwrt ALL=NOPASSWD: ALL' > /etc/sudoers.d/openwrt
 
-USER openwrt
+# USER openwrt
 WORKDIR /home/openwrt
 
 ENV OPENWRT_VERSION=18.06.2
@@ -17,6 +17,7 @@ RUN wget -O - https://github.com/openwrt/openwrt/archive/v${OPENWRT_VERSION}.tar
   scripts/feeds update -a
 
 
+#COPY --chown=openwrt:openwrt config .config
 COPY --chown=openwrt:openwrt config .config
 RUN make defconfig
 
