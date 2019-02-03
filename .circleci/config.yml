@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  all:
+    docker:
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: build
+          command: |
+            docker build -t openwrt .
+            docker run -v $PWD/bin:/home/openwrt/bin openwrt \
+              sh -c 'exec make -j $(cat /proc/cpuinfo |grep ^processor|wc -l)'
+
+      - store_artifacts:
+          path: bin/
+
+workflows:
+  version: 2
+  all:
+    jobs:
+      - all

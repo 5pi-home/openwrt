@@ -20,5 +20,4 @@ RUN wget -O - https://github.com/openwrt/openwrt/archive/v${OPENWRT_VERSION}.tar
 COPY --chown=openwrt:openwrt config .config
 RUN make defconfig
 
-ENV PACKAGES="samba4-server minidlna luci-app-minidlna mwan3"
-ENTRYPOINT [ "make" ]
+ENV PACKAGES="samba4-server minidlna luci-app-minidlna mwan3 ntfs-3g"
