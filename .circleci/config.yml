@@ -1,21 +1,40 @@
 version: 2
 jobs:
   all:
-    docker:
-      - image: circleci/golang:1.11
+    machine: true
     steps:
       - checkout
-      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "Dockerfile" }}-{{ checksum "config" }}-{{ .Revision }}
+            - v1-{{ checksum "Dockerfile" }}-{{ checksum "config" }}-
+            - v1-{{ checksum "Dockerfile" }}-
+            - v1-
       - run:
           name: build
           no_output_timeout: 1h
           command: |
             docker build -t openwrt .
-            docker run -v $PWD/bin:/home/openwrt/bin openwrt \
-              sh -c 'exec make -j $(cat /proc/cpuinfo |grep ^processor|wc -l)'
-
+            docker run --rm \
+              -v $PWD/bin:/home/openwrt/bin \
+              -v $PWD/build_dir:/home/openwrt/build_dir \
+              openwrt sh -xc \
+                "usermod -u $UID openwrt && \
+                 chown openwrt -R bin/ build_dir/ tmp/ staging_dir/ && \
+                 exec sudo -u openwrt -- \
+                  make -j $(cat /proc/cpuinfo |grep ^processor|wc -l) V=s"
+      - run:
+          name: copy-artifacts
+          command: |
+            mkdir out
+            tar -C bin/targets/x86/64/ -czf out/packages.tar.gz packages/
+            find   bin/targets/x86/64/ -type f -maxdepth 1 -exec cp {} out/ \;
       - store_artifacts:
-          path: bin/
+          path: out/
+      - save_cache:
+          key: v1-{{ checksum "Dockerfile" }}-{{ checksum "config" }}-{{ .Revision }}
+          paths:
+            - build_dir/
 
 workflows:
   version: 2
