@@ -15,14 +15,7 @@ jobs:
           no_output_timeout: 1h
           command: |
             docker build -t openwrt .
-            docker run --rm \
-              -v $PWD/bin:/home/openwrt/bin \
-              -v $PWD/build_dir:/home/openwrt/build_dir \
-              openwrt sh -xc \
-                "usermod -u $UID openwrt && \
-                 chown openwrt -R bin/ build_dir/ tmp/ staging_dir/ && \
-                 exec sudo -u openwrt -- \
-                  make -j $(cat /proc/cpuinfo |grep ^processor|wc -l) V=s"
+            ./docker-run make -j $(cat /proc/cpuinfo |grep ^processor|wc -l) V=s
       - run:
           name: copy-artifacts
           command: |
