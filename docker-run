@@ -1,11 +1,13 @@
 #!/bin/sh
-
 UID=$(id -u)
 
 docker run ${OPTS:-} --rm \
+  -ti \
   -v $PWD/bin:/home/openwrt/bin \
   -v $PWD/build_dir:/home/openwrt/build_dir \
+  -v $PWD/staging_dir:/home/openwrt/staging_dir \
+  -v $PWD/dl:/home/openwrt/dl \
   openwrt sh -xc \
     "usermod -u $UID openwrt && \
-     chown openwrt -R bin/ build_dir/ tmp/ staging_dir/ && \
-     exec sudo -u openwrt -- $@"
+     chown openwrt -R bin/ build_dir/ dl/ staging_dir/ && \
+     exec sudo -u openwrt $1"
