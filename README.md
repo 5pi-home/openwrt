@@ -26,16 +26,7 @@ opkg install \
   libustream-openssl \
   samba36-server \
   luci-app-samba \
-  prometheus-node-exporter-lua \
-  prometheus-node-exporter-lua-netstat \
-  prometheus-node-exporter-lua-openwrt \
-  prometheus-node-exporter-lua-textfile
-
-
-wget https://github.com/discordianfish/docker-on-openwrt/releases/download/1/docker_18.09.0_x86_64.opk
-opkg install docker
-/etc/init.d/docker enable
-/etc/init.d/docker start
+  dnsmasq-full
 
 
 L="user:x:1000:100:users:/hdd:/bin/false"
